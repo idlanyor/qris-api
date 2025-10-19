@@ -1,61 +1,112 @@
 # QRIS API
 
-This project is a QRIS (Quick Response Code Indonesian Standard) converter API built using Elysia.js. It provides endpoints for converting static QRIS data into dynamic QRIS strings.
+API konversi QRIS berbasis Elysia.js dengan dokumentasi OpenAPI (Swagger) dan UI sederhana untuk uji coba.
 
-## Table of Contents
+## Fitur
 
-- [Installation](#installation)
-- [Usage](#usage)
-- [API Endpoints](#api-endpoints)
-- [License](#license)
+- Endpoint `POST /convert` untuk mengonversi string QRIS dan menghitung CRC16.
+- Dokumentasi OpenAPI/Swagger tersedia di `GET /docs`.
+- UI sederhana untuk mencoba API tersedia di `GET /ui`.
 
-## Installation
+## Prasyarat
 
-1. Clone the repository:
-   ```bash
-   git clone github.com/idlanyor/qris-converter
-   cd qris-api
-   ```
+- Node.js 18+ atau Bun.
 
-2. Install the dependencies:
-   ```bash
-   npm install
-   ```
+## Instalasi
 
-3. Start the server:
-   ```bash
-   npm start
-   ```
+Menggunakan npm:
 
-## Usage
+```bash
+npm install
+```
 
-To use the QRIS API, send a POST request to the `/convert` endpoint with the required data in the request body.
+Jika Anda menggunakan Bun:
 
-### Example Request
+```bash
+bun install
+```
+
+Pastikan dependensi Swagger terpasang:
+
+```bash
+npm install @elysiajs/swagger
+```
+
+atau dengan Bun:
+
+```bash
+bun add @elysiajs/swagger
+```
+
+## Menjalankan
+
+Mode development (ts-node):
+
+```bash
+npm run start
+```
+
+Atau build + run (Node):
+
+```bash
+npm run build
+node dist/app.js
+```
+
+Dengan Bun:
+
+```bash
+bun src/app.ts
+```
+
+Server akan berjalan pada `http://localhost:3000` (atau sesuai `PORT`).
+
+- Dokumentasi: `http://localhost:3000/docs`
+- UI Sederhana: `http://localhost:3000/ui`
+
+## OpenAPI Schema
+
+Skema untuk endpoint `/convert` telah ditambahkan menggunakan validator bawaan Elysia (`t`) agar tampil di Swagger UI.
+
+### Request
+
+POST `/convert`
+
+Body JSON:
 
 ```json
 {
-  "qris": "00020101021126570011ID.DANA.WWW011893600915302259148102090225914810303UMI51440014ID.CO.QRIS.WWW0215ID10200176114730303UMI5204581253033605802ID5922Warung Sayur Bu Sugeng6010Kab. Demak610559567630458C7",
+  "qris": "<string QRIS>",
+  "nominal": "10000"
+}
+```
+
+Keterangan:
+
+- `qris` (string): String QRIS asli.
+- `nominal` (string): Nominal transaksi sebagai string angka.
+  
+
+### Response
+
+```json
+{
   "nominal": "10000",
-  "biayaLayanan": {
-    "type": "r",
-    "value": "5000"
-  }
+  "merchantName": "Roy Antidonasi Creative"
 }
 ```
 
-### Example Response
+## Endpoint Alternatif
 
-```json
-{
-  "result": "converted_qris_string_here"
-}
-```
+- `GET /convert?qris=<...>&nominal=<...>` — alternatif GET dengan query param yang mengembalikan struktur yang sama.
 
-## API Endpoints
+## Preview QR
 
-- `POST /convert`: Converts static QRIS data to dynamic QRIS string.
+- `GET /qr?text=<string>` — menghasilkan gambar PNG QR dari string.
+- `GET /qr?qris=<...>&nominal=<...>` — langsung membuat QR dari hasil konversi internal.
 
-## License
+## Catatan
 
-This project is licensed under the MIT License.
+- Endpoint dokumentasi Swagger berada di `/docs` dengan plugin `@elysiajs/swagger`.
+- UI sederhana di `/ui` tidak membutuhkan dependensi tambahan.
+- Pastikan data QRIS valid sebelum dikonversi; saat ini validasi detail belum diimplementasikan.
