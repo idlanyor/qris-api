@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>QRIS Converter UI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="h-screen overflow-auto bg-black text-slate-100">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-6">
+        <h1 class="text-3xl sm:text-4xl font-extrabold bg-gradient-to-r from-blue-400 via-violet-400 to-pink-400 bg-clip-text text-transparent mb-2">QRIS Converter</h1>
+        <p class="text-slate-400 mb-4">UI untuk mencoba endpoint <code>/convert</code>. Dokumentasi OpenAPI di <a class="text-sky-300" href="/docs" target="_blank">/docs</a>.</p>
+        <div class="relative bg-slate-900/70 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow">
+            <form id="form" class="space-y-3">
+                <div>
+                    <label for="qris" class="block font-semibold mb-1">QRIS String</label>
+                    <textarea id="qris" name="qris" placeholder="Masukkan data QRIS" required class="w-full rounded-xl border border-slate-700 bg-slate-950/80 text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/60 px-3 py-2 min-h-[140px]"></textarea>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label for="nominal" class="block font-semibold mb-1">Nominal</label>
+                        <input id="nominal" name="nominal" type="text" placeholder="contoh: 10000" required class="w-full rounded-xl border border-slate-700 bg-slate-950/80 text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/60 px-3 py-2" />
+                    </div>
+                </div>
+                <div class="mt-2 flex gap-3 flex-wrap">
+                    <button type="submit" class="relative bg-gradient-to-r from-blue-500 to-violet-500 text-white px-4 py-2 rounded-xl font-semibold shadow hover:shadow-lg transition">Convert</button>
+                    <button type="button" id="reset" class="bg-slate-800 text-slate-200 border border-slate-700 px-4 py-2 rounded-xl">Reset</button>
+                </div>
+            </form>
+            <div class="mt-4">
+                <label class="block font-semibold mb-2">Hasil</label>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 items-start">
+                    <pre id="output" class="bg-slate-950/90 border border-slate-800 p-3 rounded-xl overflow-auto">Belum ada hasil</pre>
+                    <div>
+                        <div class="font-semibold mb-2">QR Preview</div>
+                        <div id="qr-box" class="bg-slate-950/90 border border-slate-800 rounded-xl p-3 min-h-[260px] flex items-center justify-center">
+                            <span class="text-slate-400">Belum ada QR</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Hidden utility holder to ensure Tailwind generates these classes for JS toggling -->
+        <div class="hidden ring-2 ring-violet-400 shadow-lg"></div>
+    </div>
+    <script src="ui.js" defer></script>
+</body>
+</html>

@@ -1,7 +1,35 @@
 class QrisService {
-    validateInput(data: any): boolean {
-        // Implement validation logic for QRIS input data
-        return true; // Placeholder for actual validation
+    validatePayload(qris: string, nominal: string): string | null {
+        if (!nominal || !/^\d{1,13}$/.test(nominal)) {
+            return 'Nominal harus berupa angka (maks 13 digit)';
+        }
+        if (typeof qris !== 'string' || qris.length < 20) {
+            return 'QRIS tidak valid atau terlalu pendek';
+        }
+        if (!qris.startsWith('000201')) {
+            return 'QRIS tidak memiliki header 000201';
+        }
+        if (!qris.includes('5802ID')) {
+            return 'QRIS tidak memiliki country code 58=ID';
+        }
+        const merchant = this.extractMerchantName(qris);
+        if (!merchant) {
+            return 'QRIS tidak memiliki tag 59 (Merchant Name)';
+        }
+        const crcIdx = qris.lastIndexOf('6304');
+        if (crcIdx === -1 || crcIdx + 8 > qris.length) {
+            return 'QRIS tidak memiliki CRC tag 63 yang valid';
+        }
+        const providedCrc = qris.slice(crcIdx + 4, crcIdx + 8).toUpperCase();
+        const base = qris.slice(0, crcIdx);
+        const calc = this.convertCRC16(base);
+        if (!/^[0-9A-F]{4}$/.test(providedCrc)) {
+            return 'CRC bukan hex 4 digit';
+        }
+        if (providedCrc !== calc) {
+            return 'CRC tidak sesuai dengan payload';
+        }
+        return null;
     }
 
     convert(qris: string, qty: string): string {

@@ -1,0 +1,106 @@
+:root {
+  --bg: #0b0f19;
+  --panel: rgba(15, 23, 42, 0.6);
+  --panel-border: rgba(148, 163, 184, 0.15);
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --accent-1: #60a5fa;
+  --accent-2: #a78bfa;
+  --accent-3: #34d399;
+  --accent-4: #f472b6;
+  --danger: #ef4444;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif;
+}
+* { box-sizing: border-box; }
+/* html, body { height: 100%; } */
+body {
+  /* margin: 0; */
+  padding: 24px 16px;
+  color: var(--text);
+  background: #000;
+  height: 100vh;
+  overflow: auto;
+}
+.container { max-width: 980px; margin: 0 auto; }
+.brand {
+  display: inline-block;
+  background: linear-gradient(90deg, var(--accent-1), var(--accent-2), var(--accent-4));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  font-weight: 800; letter-spacing: 0.3px;
+  text-shadow: 0 0 20px rgba(99,102,241,0.25);
+}
+h1 { font-size: 1.6rem; margin: 0 0 8px; }
+@media (min-width: 640px) { h1 { font-size: 1.9rem; } }
+.desc { color: var(--muted); margin-bottom: 18px; }
+.card {
+  position: relative;
+  background: linear-gradient(180deg, rgba(15,23,42,0.75), rgba(2,6,23,0.7));
+  border: 1px solid var(--panel-border);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 10px 30px rgba(2, 6, 23, 0.7), 0 0 0 1px rgba(148, 163, 184, 0.05) inset;
+  overflow: hidden;
+}
+.card::before {
+  content: "";
+  position: absolute; inset: -1px;
+  border-radius: 16px;
+  background: linear-gradient(120deg, rgba(96,165,250,0.12), rgba(167,139,250,0.12), rgba(244,114,182,0.12));
+  filter: blur(14px);
+  z-index: 0; pointer-events: none;
+}
+.card > * { position: relative; z-index: 1; }
+label { display: block; font-weight: 600; margin-bottom: 6px; }
+input, textarea, select {
+  width: 100%; padding: 12px 12px;
+  border-radius: 12px; border: 1px solid #263042;
+  background: linear-gradient(180deg, rgba(10,15,30,0.8), rgba(8,12,24,0.8));
+  color: var(--text);
+  outline: none; transition: border 160ms ease, box-shadow 160ms ease;
+}
+textarea { min-height: 140px; resize: vertical; }
+input::placeholder, textarea::placeholder { color: #64748b; }
+input:focus, textarea:focus {
+  border-color: rgba(99,102,241,0.6);
+  box-shadow: 0 0 0 3px rgba(99,102,241,0.18), 0 0 0 1px rgba(99,102,241,0.3) inset;
+}
+.row { display: grid; grid-template-columns: 1fr; gap: 12px; }
+@media (min-width: 640px) { .row { grid-template-columns: 1fr 1fr; } }
+.actions { margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap; }
+button {
+  position: relative;
+  background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+  color: white; border: none; padding: 11px 16px; border-radius: 12px;
+  cursor: pointer; font-weight: 600; letter-spacing: .2px;
+  box-shadow: 0 10px 20px rgba(99,102,241,0.25), 0 2px 6px rgba(2,6,23,0.4);
+  transition: transform 120ms ease, box-shadow 120ms ease, opacity 120ms ease;
+}
+button:hover { transform: translateY(-1px); box-shadow: 0 14px 28px rgba(99,102,241,0.3), 0 3px 8px rgba(2,6,23,0.5); }
+button:active { transform: translateY(0); }
+button.secondary {
+  background: linear-gradient(180deg, #0f172a, #0b1220);
+  color: #cbd5e1; border: 1px solid var(--panel-border);
+  box-shadow: none;
+}
+pre {
+  background: linear-gradient(180deg, rgba(10,15,30,0.9), rgba(6,10,20,0.9));
+  border: 1px solid var(--panel-border);
+  padding: 14px; border-radius: 12px; overflow: auto;
+  position: relative;
+}
+pre::before {
+  content: ""; position: absolute; left: 0; top: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--accent-1), var(--accent-2), var(--accent-3), var(--accent-4));
+  border-top-left-radius: 12px; border-top-right-radius: 12px;
+}
+.link { color: #93c5fd; text-decoration: none; }
+.grid-preview { display:grid; grid-template-columns: 1fr; gap: 14px; align-items: start; }
+@media (min-width: 860px) { .grid-preview { grid-template-columns: 1fr 320px; } }
+.qr-box {
+  background: linear-gradient(180deg, rgba(5,10,20,0.9), rgba(5,10,20,0.85));
+  border: 1px solid var(--panel-border);
+  border-radius: 12px; padding: 10px; min-height: 240px;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow: inset 0 0 0 1px rgba(148,163,184,0.05);
+}
+.qr-box.glow { box-shadow: 0 0 0 1px rgba(148,163,184,0.12) inset, 0 0 24px rgba(99,102,241,0.25), 0 0 64px rgba(167,139,250,0.15); }
