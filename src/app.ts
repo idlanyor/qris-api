@@ -1,6 +1,8 @@
 import { Elysia, t } from 'elysia';
 import { swagger } from '@elysiajs/swagger';
 import QRCode from 'qrcode';
+import { Jimp } from 'jimp';
+import jsQR from 'jsqr';
 import { QrisController } from './controllers/qris.controller';
 import QrisService from './services/qris.service';
 import { QrisInput } from './types/qris.type';
@@ -16,6 +18,7 @@ const qrisService = new QrisService();
 
 app.use(
     swagger({
+        provider: 'swagger-ui',
         documentation: {
             info: {
                 title: 'QRIS Converter API',
@@ -28,6 +31,77 @@ app.use(
         },
         path: '/docs'
     })
+);
+
+app.post(
+    '/decode',
+    async ({ body }) => {
+        console.log('Received /decode request');
+        try {
+            const file = (body as any).image as File;
+            if (!file) {
+                console.log('No file found in body');
+                return new Response(JSON.stringify({ error: 'File gambar tidak ditemukan' }), {
+                    status: 400,
+                    headers: { 'content-type': 'application/json' }
+                });
+            }
+
+            console.log('Processing file:', file.name, 'size:', file.size);
+            const arrayBuffer = await file.arrayBuffer();
+            const buffer = Buffer.from(arrayBuffer);
+            const image = await Jimp.read(buffer);
+
+            const qrCode = jsQR(
+                new Uint8ClampedArray(image.bitmap.data),
+                image.bitmap.width,
+                image.bitmap.height
+            );
+
+            if (!qrCode) {
+                console.log('QR Code not found in image');
+                return new Response(JSON.stringify({ error: 'QR Code tidak terdeteksi pada gambar' }), {
+                    status: 400,
+                    headers: { 'content-type': 'application/json' }
+                });
+            }
+
+            console.log('Successfully decoded QR:', qrCode.data);
+            return { text: qrCode.data };
+        } catch (e: any) {
+            console.error('Error processing /decode:', e);
+            return new Response(JSON.stringify({ error: e?.message || 'Gagal memproses gambar' }), {
+                status: 500,
+                headers: { 'content-type': 'application/json' }
+            });
+        }
+    },
+    {
+        body: t.Object({
+            image: t.File()
+        }),
+        detail: {
+            summary: 'Decode QR dari gambar',
+            tags: ['QRIS'],
+            requestBody: {
+                content: {
+                    'multipart/form-data': {
+                        schema: {
+                            type: 'object',
+                            properties: {
+                                image: {
+                                    type: 'string',
+                                    format: 'binary',
+                                    description: 'File gambar QR'
+                                }
+                            },
+                            required: ['image']
+                        }
+                    }
+                }
+            }
+        }
+    }
 );
 
 app.post(
@@ -154,7 +228,7 @@ app.listen(PORT, () => {
 const RATE_LIMIT_RPS = 10;
 type RateRec = { ts: number; count: number };
 const rateMap = new Map<string, RateRec>();
-const limitedPaths = new Set<string>(['/convert', '/qr']);
+const limitedPaths = new Set<string>(['/convert', '/qr', '/decode']);
 
 function getClientIp(req: Request): string {
     const xf = req.headers.get('x-forwarded-for');

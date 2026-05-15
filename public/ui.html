@@ -3,46 +3,73 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>QRIS Converter UI</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>QRIS Converter - Bootstrap UI</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="ui.css">
 </head>
-<body class="h-screen overflow-auto bg-black text-slate-100">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-6">
-        <h1 class="text-3xl sm:text-4xl font-extrabold bg-gradient-to-r from-blue-400 via-violet-400 to-pink-400 bg-clip-text text-transparent mb-2">QRIS Converter</h1>
-        <p class="text-slate-400 mb-4">UI untuk mencoba endpoint <code>/convert</code>. Dokumentasi OpenAPI di <a class="text-sky-300" href="/docs" target="_blank">/docs</a>.</p>
-        <div class="relative bg-slate-900/70 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow">
-            <form id="form" class="space-y-3">
-                <div>
-                    <label for="qris" class="block font-semibold mb-1">QRIS String</label>
-                    <textarea id="qris" name="qris" placeholder="Masukkan data QRIS" required class="w-full rounded-xl border border-slate-700 bg-slate-950/80 text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/60 px-3 py-2 min-h-[140px]"></textarea>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                        <label for="nominal" class="block font-semibold mb-1">Nominal</label>
-                        <input id="nominal" name="nominal" type="text" placeholder="contoh: 10000" required class="w-full rounded-xl border border-slate-700 bg-slate-950/80 text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/60 px-3 py-2" />
-                    </div>
-                </div>
-                <div class="mt-2 flex gap-3 flex-wrap">
-                    <button type="submit" class="relative bg-gradient-to-r from-blue-500 to-violet-500 text-white px-4 py-2 rounded-xl font-semibold shadow hover:shadow-lg transition">Convert</button>
-                    <button type="button" id="reset" class="bg-slate-800 text-slate-200 border border-slate-700 px-4 py-2 rounded-xl">Reset</button>
-                </div>
-            </form>
-            <div class="mt-4">
-                <label class="block font-semibold mb-2">Hasil</label>
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 items-start">
-                    <pre id="output" class="bg-slate-950/90 border border-slate-800 p-3 rounded-xl overflow-auto">Belum ada hasil</pre>
-                    <div>
-                        <div class="font-semibold mb-2">QR Preview</div>
-                        <div id="qr-box" class="bg-slate-950/90 border border-slate-800 rounded-xl p-3 min-h-[260px] flex items-center justify-center">
-                            <span class="text-slate-400">Belum ada QR</span>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <header class="text-center mb-5">
+                    <h1 class="display-4 fw-bold text-primary">QRIS Converter</h1>
+                    <p class="lead text-muted">
+                        UI untuk mencoba endpoint <code>/convert</code>. 
+                        Dokumentasi OpenAPI di <a class="text-decoration-none" href="/docs" target="_blank">/docs</a>.
+                    </p>
+                </header>
+
+                <div class="card shadow-sm border-0 rounded-4">
+                    <div class="card-body p-4 p-md-5">
+                        <form id="form" class="mb-5">
+                            <div class="mb-4">
+                                <label for="qrUpload" class="form-label fw-bold">Upload Gambar QRIS</label>
+                                <input class="form-control rounded-3" type="file" id="qrUpload" accept="image/*">
+                                <div class="form-text">Atau masukkan string QRIS secara manual di bawah.</div>
+                            </div>
+                            <div class="mb-4">
+                                <label for="qris" class="form-label fw-bold">QRIS String</label>
+                                <textarea id="qris" name="qris" placeholder="Masukkan data QRIS di sini..." required class="form-control rounded-3" rows="5"></textarea>
+                            </div>
+                            <div class="mb-4">
+                                <label for="nominal" class="form-label fw-bold">Nominal</label>
+                                <input id="nominal" name="nominal" type="text" placeholder="Contoh: 10000" required class="form-control rounded-3" />
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg px-4 rounded-3">Convert Now</button>
+                                <button type="button" id="reset" class="btn btn-outline-secondary btn-lg px-4 rounded-3">Reset Form</button>
+                            </div>
+                        </form>
+
+                        <hr class="my-5">
+
+                        <div class="row g-4">
+                            <div class="col-md-7">
+                                <h2 class="h4 mb-3 fw-bold border-start border-primary border-4 ps-2">Hasil Konversi</h2>
+                                <div class="bg-dark text-white p-3 rounded-3 overflow-auto" style="min-height: 250px;">
+                                    <pre id="output" class="mb-0 m-0 text-info">Belum ada hasil</pre>
+                                </div>
+                            </div>
+                            <div class="col-md-5 text-center">
+                                <h2 class="h4 mb-3 fw-bold border-start border-primary border-4 ps-2 text-start">QR Preview</h2>
+                                <div id="qr-box" class="bg-white border rounded-3 d-flex align-items-center justify-content-center" style="min-height: 250px;">
+                                    <span class="text-muted">Belum ada QR</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <footer class="text-center mt-5 text-muted small">
+                    &copy; 2026 QRIS Converter API - Built with Bootstrap 5
+                </footer>
             </div>
         </div>
-        <!-- Hidden utility holder to ensure Tailwind generates these classes for JS toggling -->
-        <div class="hidden ring-2 ring-violet-400 shadow-lg"></div>
     </div>
+    
+    <!-- Bootstrap 5 Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="ui.js" defer></script>
 </body>
 </html>

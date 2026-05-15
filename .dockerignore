@@ -1,0 +1,13 @@
+node_modules
+.git
+.env
+Dockerfile
+docker-compose.yml
+README.md
+*.jpeg
+*.jpg
+*.png
+test-decode.ts
+verify-crc.js
+ui-redesign-plan.md
+qris-upload-plan.md

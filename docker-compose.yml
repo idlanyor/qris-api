@@ -1,0 +1,23 @@
+services:
+  qris-api:
+    build: .
+    container_name: qris-api
+    ports:
+      - "3111:3000"
+    environment:
+      - PORT=3000
+      - REDIS_URL=redis://redis:6379
+      - NODE_ENV=production
+    depends_on:
+      - redis
+    restart: always
+
+  redis:
+    image: redis:alpine
+    container_name: qris-redis
+    restart: always
+    volumes:
+      - redis-data:/data
+
+volumes:
+  redis-data:

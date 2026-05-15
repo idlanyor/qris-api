@@ -21,7 +21,7 @@ class QrisService {
             return 'QRIS tidak memiliki CRC tag 63 yang valid';
         }
         const providedCrc = qris.slice(crcIdx + 4, crcIdx + 8).toUpperCase();
-        const base = qris.slice(0, crcIdx);
+        const base = qris.slice(0, crcIdx + 4);
         const calc = this.convertCRC16(base);
         if (!/^[0-9A-F]{4}$/.test(providedCrc)) {
             return 'CRC bukan hex 4 digit';
